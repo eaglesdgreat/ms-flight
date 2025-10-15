@@ -8,6 +8,7 @@ docs:
 start:
 	- docker run -d --rm --name ms-nb-docs -p 3939:80 -v ${PWD}/api.yml:/usr/share/nginx/html/swagger.yaml -e SPEC_URL=swagger.yaml redocly/redoc:v2.0.0-rc.8-1
 	- @echo "server started at: http://0.0.0.0:3939"
+	- @echo "server started at: http://localhost:3939 (for Windows users if using WSL)"
 
 .PHONY: stop
 stop:
