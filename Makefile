@@ -72,11 +72,11 @@ mysql:
 	docker-compose -p ${project} exec ${service}-db mysql -u root -pverysecretsomething
 
 .PHONY: test
-test: start test-exec
+test: start test-exec stop
 
 .PHONY: test-exec
 test-exec:
-	docker-compose -p ${project} exec ${service} npm run test
+	docker-compose -p ${project} exec -T ${service} npm run test
 
 .PHONY: lint-fix
 lint-fix: start
