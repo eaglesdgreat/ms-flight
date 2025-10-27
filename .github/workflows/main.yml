@@ -28,6 +28,14 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
+      # Start services and check their status
+      - name: Start services and check status
+        run: |
+          make start
+          sleep 10  # Wait for containers to initialize
+          docker-compose -p msupandrunning ps
+          docker-compose -p msupandrunning logs
+
       # Test the service using the make file
       - name: Run Unit Tests
         run: make test
