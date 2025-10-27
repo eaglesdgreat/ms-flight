@@ -21,6 +21,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      # Make shell scripts executable
+      - name: Make shell scripts executable
+        run: |
+          chmod +x shell/*.sh
+          # If you have scripts in other directories, add them too
+          # chmod +x scripts/*.sh
+          # chmod +x *.sh
+
+      - name: Verify script permissions
+        run: |
+          echo "Verifying shell scripts permissions"
+          ls -la shell/*.sh
+          file shell/*.sh
+
       # Install docker-compose before running make test
       - name: Install docker-compose
         run: |
@@ -33,7 +47,9 @@ jobs:
         run: |
           make start
           sleep 10  # Wait for containers to initialize
-          docker-compose -p msupandrunning ps
+          echo "Container status:"
+          docker-compose -p msupandrunning ps -a
+          echo "Container logs:"
           docker-compose -p msupandrunning logs
 
       # Test the service using the make file
