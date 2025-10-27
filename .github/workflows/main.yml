@@ -23,8 +23,7 @@ jobs:
 
       # Make shell scripts executable
       - name: Make shell scripts executable
-        run: |
-          chmod +x shell/*.sh
+        run: chmod +x shell/*.sh
 
       # Install docker-compose before running make test
       - name: Install docker-compose
@@ -35,16 +34,7 @@ jobs:
 
       # Test the service using the make file
       - name: Run Unit Tests
-        run: |
-          # Run the tests and capture output
-          docker-compose -p msupandrunning exec ms-flights npm run test 2>&1 || true
-          docker-compose -p msupandrunning logs ms-flights
-          # Check the exit code of the tests
-          if [ ${PIPESTATUS[0]} -ne 0 ]; then
-            echo "Tests failed"
-            exit 1
-          fi
-          make test
+        run: make test
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
