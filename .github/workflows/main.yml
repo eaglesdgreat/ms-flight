@@ -34,7 +34,26 @@ jobs:
 
       # Test the service using the make file
       - name: Run Unit Tests
-        run: make test
+        run: |
+          timeout 15m make test
+
+          # Check test exit code
+          TEST_EXIT_CODE=$?
+
+          # Stop services
+          make stop
+
+          # Exit with test result
+          if [ $TEST_EXIT_CODE -eq 0 ]; then
+            echo "Tests passed"
+            exit 0
+          elif [ $TEST_EXIT_CODE -eq 124 ]; then
+            echo "Tests timed out"
+            exit 1
+          else
+            echo "Tests failed with exit code $TEST_EXIT_CODE"
+            exit $TEST_EXIT_CODE
+          fi
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
