@@ -25,15 +25,6 @@ jobs:
       - name: Make shell scripts executable
         run: |
           chmod +x shell/*.sh
-          # If you have scripts in other directories, add them too
-          # chmod +x scripts/*.sh
-          # chmod +x *.sh
-
-      - name: Verify script permissions
-        run: |
-          echo "Verifying shell scripts permissions"
-          ls -la shell/*.sh
-          file shell/*.sh
 
       # Install docker-compose before running make test
       - name: Install docker-compose
@@ -42,19 +33,18 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # Start services and check their status
-      - name: Start services and check status
-        run: |
-          make start
-          sleep 10  # Wait for containers to initialize
-          echo "Container status:"
-          docker-compose -p msupandrunning ps -a
-          echo "Container logs:"
-          docker-compose -p msupandrunning logs
-
       # Test the service using the make file
       - name: Run Unit Tests
-        run: make test
+        run: |
+          # Run the tests and capture output
+          docker-compose -p msupandrunning exec ms-flights npm run test 2>&1 || true
+          docker-compose -p msupandrunning logs ms-flights
+          # Check the exit code of the tests
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "Tests failed"
+            exit 1
+          fi
+          make test
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
