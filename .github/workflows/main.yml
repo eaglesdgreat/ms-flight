@@ -34,8 +34,12 @@ jobs:
 
       # Test the service using the make file
       - name: Run Unit Tests
-        run: |
-          timeout 2m make test
+        run: make test
+
+      # Stop the service before pushing to ducker hub
+      - name: Stop containers
+        if: always() # This ensures the step runs even if tests fail
+        run: make stop
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
