@@ -41,6 +41,9 @@ jobs:
         if: always() # This ensures the step runs even if tests fail
         run: make stop
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       # Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
